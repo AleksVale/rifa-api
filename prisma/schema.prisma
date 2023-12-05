@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  number    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  raffle    Raffle   @relation(fields: [raffleId], references: [id])
+  raffleId  Int
+
+  @@map("tickets")
+}
+
+model Raffle {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tickets   Ticket[]
+
+  @@map("raffles")
+}
