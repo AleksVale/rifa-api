@@ -1,31 +1,37 @@
+// raffle.service.ts
 import { Injectable } from '@nestjs/common';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
-import { PrismaService } from '../prisma.service';
-import { Raffle } from '@prisma/client';
+import { RaffleRepository } from './raffle.repository';
 
 @Injectable()
 export class RaffleService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly raffleRepository: RaffleRepository) {}
 
-  create(createRaffleDto: CreateRaffleDto) {
-    this.prisma.raffle.create({ data: createRaffleDto });
-    return 'This action adds a new raffle';
+  async create(createRaffleDto: CreateRaffleDto) {
+    const { name, ticketLimit } = createRaffleDto;
+
+    const newRaffle = await this.raffleRepository.create({
+      name,
+      ticketLimit,
+    });
+
+    return newRaffle;
   }
 
   findAll() {
-    return `This action returns all raffle`;
+    return this.raffleRepository.findAll();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} raffle`;
+    return this.raffleRepository.findOne(id);
   }
 
   update(id: number, updateRaffleDto: UpdateRaffleDto) {
-    return `This action updates a #${id} raffle`;
+    return this.raffleRepository.update(id, updateRaffleDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} raffle`;
+    return this.raffleRepository.remove(id);
   }
 }

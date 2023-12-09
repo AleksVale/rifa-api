@@ -10,26 +10,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StatusOptions {
+  PENDING
+  PAID
+  CANCELLED
+}
+
 model Ticket {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String
-  number    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  raffle    Raffle   @relation(fields: [raffleId], references: [id])
-  raffleId  Int
+  id             Int           @id @default(autoincrement())
+  name           String
+  email          String
+  phone          String
+  number         Int
+  status         StatusOptions
+  expirationDate DateTime
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime?     @updatedAt
+  raffle         Raffle        @relation(fields: [raffleId], references: [id])
+  raffleId       Int
 
   @@map("tickets")
 }
 
 model Raffle {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tickets   Ticket[]
+  id          Int         @id @default(autoincrement())
+  name        String
+  ticketLimit Int
+  description String?     @db.Text
+  minTickets  Int?
+  maxTickets  Int?
+  showRanking Boolean?
+  drawingDate DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime?   @updatedAt
+  tickets     Ticket[]
+  Prize       Prize[]
+  Promotion   Promotion[]
+  Winner      Winner?
 
   @@map("raffles")
+}
+
+model Prize {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  raffle    Raffle    @relation(fields: [raffleId], references: [id])
+  raffleId  Int
+
+  @@map("prizes")
+}
+
+model Promotion {
+  id        Int       @id @default(autoincrement())
+  quantity  Int
+  price     Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  raffle    Raffle    @relation(fields: [raffleId], references: [id])
+  raffleId  Int
+
+  @@map("promotions")
+}
+
+model Winner {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  number    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  raffle    Raffle    @relation(fields: [raffleId], references: [id])
+  raffleId  Int       @unique
+
+  @@map("winners")
 }

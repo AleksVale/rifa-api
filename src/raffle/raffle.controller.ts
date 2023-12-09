@@ -10,14 +10,31 @@ import {
 import { RaffleService } from './raffle.service';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SuccessResponse } from 'src/common/dto/success.dto';
+import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 
+@ApiTags('Rifa')
 @Controller('raffle')
 export class RaffleController {
   constructor(private readonly raffleService: RaffleService) {}
 
   @Post()
-  create(@Body() createRaffleDto: CreateRaffleDto) {
-    return this.raffleService.create(createRaffleDto);
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    type: SuccessResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+    type: BadRequestResponse,
+  })
+  async create(
+    @Body() createRaffleDto: CreateRaffleDto,
+  ): Promise<SuccessResponse> {
+    await this.raffleService.create(createRaffleDto);
+    return { success: true };
   }
 
   @Get()
@@ -31,8 +48,22 @@ export class RaffleController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRaffleDto: UpdateRaffleDto) {
-    return this.raffleService.update(+id, updateRaffleDto);
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    type: SuccessResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+    type: BadRequestResponse,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateRaffleDto: UpdateRaffleDto,
+  ): Promise<SuccessResponse> {
+    await this.raffleService.update(+id, updateRaffleDto);
+    return { success: true };
   }
 
   @Delete(':id')
