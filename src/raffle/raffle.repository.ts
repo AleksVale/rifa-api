@@ -15,6 +15,7 @@ export class RaffleRepository {
         description: '',
         maxTickets: data.ticketLimit,
         minTickets: 1,
+        showRanking: false,
       },
     });
   }
@@ -34,20 +35,27 @@ export class RaffleRepository {
       where: { id },
       data: {
         ...raffleData,
-        Prize: {
-          upsert: prizes.map((prize) => ({
-            where: { id: prize.id },
-            update: prize,
-            create: { name: prize.name },
-          })),
-        },
-        Promotion: {
-          upsert: promotions.map((promotion) => ({
-            where: { id: promotion.id },
-            update: promotion,
-            create: { quantity: promotion.quantity, price: promotion.price },
-          })),
-        },
+        Prize: prizes
+          ? {
+              upsert: prizes.map((prize) => ({
+                where: { id: prize.id },
+                update: prize,
+                create: { name: prize.name },
+              })),
+            }
+          : undefined, // Set to undefined if not provided
+        Promotion: promotions
+          ? {
+              upsert: promotions.map((promotion) => ({
+                where: { id: promotion.id },
+                update: promotion,
+                create: {
+                  quantity: promotion.quantity,
+                  price: promotion.price,
+                },
+              })),
+            }
+          : undefined, // Set to undefined if not provided
       },
     });
 
