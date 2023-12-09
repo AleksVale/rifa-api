@@ -15,7 +15,7 @@ import { SuccessResponse } from 'src/common/dto/success.dto';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 
 @ApiTags('Rifa')
-@Controller('raffle')
+@Controller('raffles')
 export class RaffleController {
   constructor(private readonly raffleService: RaffleService) {}
 
