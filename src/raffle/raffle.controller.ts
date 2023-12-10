@@ -49,7 +49,7 @@ export class RaffleController {
 
   @Patch(':id')
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Success',
     type: SuccessResponse,
   })
