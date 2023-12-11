@@ -13,6 +13,7 @@ import { UpdateRaffleDto } from './dto/update-raffle.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessResponse } from 'src/common/dto/success.dto';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
+import { Raffle } from '@prisma/client';
 
 @ApiTags('Rifa')
 @Controller('raffles')
@@ -30,11 +31,8 @@ export class RaffleController {
     description: 'Bad request',
     type: BadRequestResponse,
   })
-  async create(
-    @Body() createRaffleDto: CreateRaffleDto,
-  ): Promise<SuccessResponse> {
-    await this.raffleService.create(createRaffleDto);
-    return { success: true };
+  async create(@Body() createRaffleDto: CreateRaffleDto): Promise<Raffle> {
+    return this.raffleService.create(createRaffleDto);
   }
 
   @Get()

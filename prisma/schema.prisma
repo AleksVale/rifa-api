@@ -36,6 +36,7 @@ model Raffle {
   id          Int         @id @default(autoincrement())
   name        String
   ticketLimit Int
+  price       Float
   description String?     @db.Text
   minTickets  Int?
   maxTickets  Int?

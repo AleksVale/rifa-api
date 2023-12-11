@@ -9,11 +9,12 @@ export class RaffleService {
   constructor(private readonly raffleRepository: RaffleRepository) {}
 
   async create(createRaffleDto: CreateRaffleDto) {
-    const { name, ticketLimit } = createRaffleDto;
+    const { name, ticketLimit, price } = createRaffleDto;
 
     const newRaffle = await this.raffleRepository.create({
       name,
       ticketLimit,
+      price,
     });
 
     return newRaffle;
