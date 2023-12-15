@@ -10,7 +10,9 @@ import {
 import { PrizeService } from './prize.service';
 import { CreatePrizeDto } from './dto/create-prize.dto';
 import { UpdatePrizeDto } from './dto/update-prize.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Prize')
 @Controller('prize')
 export class PrizeController {
   constructor(private readonly prizeService: PrizeService) {}

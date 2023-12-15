@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { WinnerService } from './winner.service';
 import { CreateWinnerDto } from './dto/create-winner.dto';
 import { UpdateWinnerDto } from './dto/update-winner.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Winner')
 @Controller('winner')
 export class WinnerController {
   constructor(private readonly winnerService: WinnerService) {}
