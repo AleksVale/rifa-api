@@ -5,9 +5,11 @@ import { RaffleModule } from './raffle/raffle.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PromotionModule } from './promotion/promotion.module';
+import { PrizeModule } from './prize/prize.module';
+import { WinnerModule } from './winner/winner.module';
 
 @Module({
-  imports: [RaffleModule, AuthModule, UsersModule, PromotionModule],
+  imports: [RaffleModule, AuthModule, UsersModule, PromotionModule, PrizeModule, WinnerModule],
   controllers: [AppController],
   providers: [AppService],
 })

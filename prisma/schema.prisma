@@ -55,6 +55,7 @@ model Raffle {
 model Prize {
   id        Int       @id @default(autoincrement())
   name      String
+  place     Int
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   raffle    Raffle    @relation(fields: [raffleId], references: [id])
