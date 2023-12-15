@@ -40,7 +40,7 @@ export class RaffleRepository {
               upsert: prizes.map((prize) => ({
                 where: { id: prize.id },
                 update: prize,
-                create: { name: prize.name },
+                create: { name: prize.name, place: prize.place },
               })),
             }
           : undefined, // Set to undefined if not provided

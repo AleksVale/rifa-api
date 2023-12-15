@@ -20,6 +20,11 @@ class PrizeDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsInt()
+  place?: number;
 }
 
 class PromotionDto {
