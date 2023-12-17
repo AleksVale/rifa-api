@@ -54,6 +54,11 @@ export class UpdateRaffleDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  TimeToPay?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
   @IsDateString()
   drawingDate?: string;
 

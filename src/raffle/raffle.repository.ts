@@ -25,11 +25,16 @@ export class RaffleRepository {
   }
 
   findOne(id: number): Promise<Raffle | null> {
-    return this.prisma.raffle.findUnique({ where: { id } });
+    return this.prisma.raffle.findUnique({
+      where: { id },
+      include: { Prize: true, Promotion: true },
+    });
   }
 
   async update(id: number, data: UpdateRaffleDto) {
     const { prizes, promotions, ...raffleData } = data;
+
+    console.log(raffleData);
 
     const updatedRaffle = await this.prisma.raffle.update({
       where: { id },
@@ -44,19 +49,21 @@ export class RaffleRepository {
               })),
             }
           : undefined, // Set to undefined if not provided
-        Promotion: promotions
-          ? {
-              upsert: promotions.map((promotion) => ({
-                where: { id: promotion.id },
-                update: promotion,
-                create: {
-                  quantity: promotion.quantity,
-                  price: promotion.price,
-                },
-              })),
-            }
-          : undefined, // Set to undefined if not provided
       },
+    });
+
+    await this.prisma.promotion.deleteMany({
+      where: { raffleId: id },
+    });
+
+    const promotionsMounted = promotions.map((promotion) => ({
+      quantity: promotion.quantity,
+      price: promotion.price,
+      raffleId: id,
+    }));
+
+    await this.prisma.promotion.createMany({
+      data: promotionsMounted,
     });
 
     return updatedRaffle;
