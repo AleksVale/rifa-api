@@ -10,7 +10,7 @@ import { CreatePromotionDto } from './dto/create-promotion.dto';
 export class PromotionController {
   constructor(private readonly promotionService: PromotionService) {}
 
-  @Post(':id')
+  @Post()
   @ApiResponse({
     status: 201,
     description: 'Success',
