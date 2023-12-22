@@ -35,6 +35,24 @@ export class TicketService {
     }
   }
 
+  async findByPhone(phone: string) {
+    try {
+      const ticket = await this.ticketRepository.findByPhone(phone);
+      return ticket;
+    } catch (error) {
+      throw new Error('Failed to fetch ticket.');
+    }
+  }
+
+  async findByRaffle(id: number) {
+    try {
+      const ticket = await this.ticketRepository.findByRaffle(id);
+      return ticket;
+    } catch (error) {
+      throw new Error('Failed to fetch ticket.');
+    }
+  }
+
   async update(id: number, updateTicketDto: UpdateTicketDto) {
     try {
       const updatedTicket = await this.ticketRepository.update(

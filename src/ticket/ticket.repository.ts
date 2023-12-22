@@ -7,15 +7,25 @@ export class TicketRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(createTicketDto: CreateTicketDto) {
+    const buyer = await this.prisma.buyer.findUnique({
+      where: { phone: createTicketDto.phone },
+    });
+    if (!buyer) {
+      await this.prisma.buyer.create({
+        data: {
+          name: createTicketDto.name,
+          phone: createTicketDto.phone,
+          email: createTicketDto.email,
+        },
+      });
+    }
     return this.prisma.ticket.create({
       data: {
-        name: createTicketDto.name,
-        email: createTicketDto.email,
-        phone: createTicketDto.phone,
         number: createTicketDto.number,
         status: createTicketDto.status,
         expirationDate: createTicketDto.expirationDate,
         raffleId: createTicketDto.raffleId,
+        buyerId: buyer.id,
       },
     });
   }
@@ -26,6 +36,19 @@ export class TicketRepository {
 
   async findOne(id: number) {
     return this.prisma.ticket.findUnique({ where: { id } });
+  }
+
+  async findByPhone(phone: string) {
+    return this.prisma.ticket.findMany({
+      where: { Buyer: { phone } },
+    });
+  }
+
+  async findByRaffle(id: number) {
+    return this.prisma.ticket.findMany({
+      where: { raffle: { id } },
+      include: { Buyer: true },
+    });
   }
 
   async remove(id: number) {
