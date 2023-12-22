@@ -20,8 +20,17 @@ export class RaffleService {
     return newRaffle;
   }
 
-  findAll() {
-    return this.raffleRepository.findAll();
+  async findAll(status?: string) {
+    const raffles = await this.raffleRepository.findAll();
+
+    return raffles.filter((raffle) => {
+      if (status === 'active') {
+        return !raffle.Winner;
+      } else if (status === 'inactive') {
+        return !!raffle.Winner;
+      }
+      return true;
+    });
   }
 
   findOne(id: number) {

@@ -6,11 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RaffleService } from './raffle.service';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SuccessResponse } from 'src/common/dto/success.dto';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 import { Raffle } from '@prisma/client';
@@ -36,8 +37,9 @@ export class RaffleController {
   }
 
   @Get()
-  findAll() {
-    return this.raffleService.findAll();
+  @ApiQuery({ name: 'status', enum: ['active', 'inactive'] })
+  findAll(@Query('status') status: string) {
+    return this.raffleService.findAll(status);
   }
 
   @Get(':id')

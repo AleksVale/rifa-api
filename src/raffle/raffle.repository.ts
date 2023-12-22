@@ -20,8 +20,8 @@ export class RaffleRepository {
     });
   }
 
-  findAll(): Promise<Raffle[]> {
-    return this.prisma.raffle.findMany();
+  findAll() {
+    return this.prisma.raffle.findMany({ include: { Winner: true } });
   }
 
   findOne(id: number): Promise<Raffle | null> {
