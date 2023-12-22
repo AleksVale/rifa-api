@@ -1,15 +1,16 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { PromotionService } from './promotion.service';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 import { SuccessResponse } from 'src/common/dto/success.dto';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
 
+@ApiTags('Promotion')
 @Controller('promotions')
 export class PromotionController {
   constructor(private readonly promotionService: PromotionService) {}
 
-  @Post(':id')
+  @Post()
   @ApiResponse({
     status: 201,
     description: 'Success',

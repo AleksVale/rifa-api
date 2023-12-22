@@ -20,6 +20,11 @@ class PrizeDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsInt()
+  place?: number;
 }
 
 class PromotionDto {
@@ -45,6 +50,11 @@ export class UpdateRaffleDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  TimeToPay?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
