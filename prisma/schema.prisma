@@ -24,19 +24,23 @@ model Buyer {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   Ticket    Ticket[]
+
+  @@map("buyers")
 }
 
 model Ticket {
   id             Int           @id @default(autoincrement())
   number         Int
   status         StatusOptions
-  expirationDate DateTime
+  expirationDate DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime?     @updatedAt
   raffle         Raffle        @relation(fields: [raffleId], references: [id])
   raffleId       Int
   buyerId        Int
   Buyer          Buyer         @relation(fields: [buyerId], references: [id])
+
+  @@map("tickets")
 }
 
 model Raffle {

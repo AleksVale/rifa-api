@@ -1,8 +1,10 @@
 // ticket.repository.ts
-import { PrismaService } from 'src/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 
+@Injectable()
 export class TicketRepository {
   constructor(private prisma: PrismaService) {}
 
@@ -45,10 +47,20 @@ export class TicketRepository {
   }
 
   async findByRaffle(id: number) {
-    return this.prisma.ticket.findMany({
-      where: { raffle: { id } },
-      include: { Buyer: true },
+    const buyers = await this.prisma.buyer.findMany({
+      where: { Ticket: { some: { raffleId: id } } },
+      include: { Ticket: true },
+      orderBy: {
+        Ticket: {
+          _count: 'desc', // Ordenar por quantidade de tickets em ordem descendente
+        },
+      },
     });
+
+    return buyers.map((buyer, index) => ({
+      ...buyer,
+      place: index + 1, // Adicionar a coluna 'place' com base na posição no array ordenado
+    }));
   }
 
   async remove(id: number) {

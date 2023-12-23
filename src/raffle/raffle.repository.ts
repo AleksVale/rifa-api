@@ -20,7 +20,7 @@ export class RaffleRepository {
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.raffle.findMany({ include: { Winner: true } });
   }
 
@@ -34,22 +34,9 @@ export class RaffleRepository {
   async update(id: number, data: UpdateRaffleDto) {
     const { prizes, promotions, ...raffleData } = data;
 
-    console.log(raffleData);
-
     const updatedRaffle = await this.prisma.raffle.update({
       where: { id },
-      data: {
-        ...raffleData,
-        Prize: prizes
-          ? {
-              upsert: prizes.map((prize) => ({
-                where: { id: prize.id },
-                update: prize,
-                create: { name: prize.name, place: prize.place },
-              })),
-            }
-          : undefined, // Set to undefined if not provided
-      },
+      data: raffleData,
     });
 
     await this.prisma.promotion.deleteMany({
@@ -64,6 +51,20 @@ export class RaffleRepository {
 
     await this.prisma.promotion.createMany({
       data: promotionsMounted,
+    });
+
+    await this.prisma.prize.deleteMany({
+      where: { raffleId: id },
+    });
+    const prizesMounted = prizes.map((prize) => ({
+      name: prize.name,
+      place: prize.place,
+      raffleId: id,
+    }));
+
+    // Cria as novas premiações
+    await this.prisma.prize.createMany({
+      data: prizesMounted,
     });
 
     return updatedRaffle;

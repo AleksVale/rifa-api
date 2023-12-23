@@ -10,7 +10,15 @@ import { WinnerModule } from './winner/winner.module';
 import { TicketModule } from './ticket/ticket.module';
 
 @Module({
-  imports: [RaffleModule, AuthModule, UsersModule, PromotionModule, PrizeModule, WinnerModule, TicketModule],
+  imports: [
+    RaffleModule,
+    AuthModule,
+    UsersModule,
+    PromotionModule,
+    PrizeModule,
+    WinnerModule,
+    TicketModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

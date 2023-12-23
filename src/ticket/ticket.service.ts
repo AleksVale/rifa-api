@@ -49,6 +49,7 @@ export class TicketService {
       const ticket = await this.ticketRepository.findByRaffle(id);
       return ticket;
     } catch (error) {
+      console.log(error);
       throw new Error('Failed to fetch ticket.');
     }
   }
