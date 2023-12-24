@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { MercadoPagoPayment } from 'src/services/mercado-pago.service';
+import * as dayjs from 'dayjs';
+import { StatusOptions } from '@prisma/client';
 
 @Injectable()
 export class TicketRepository {
@@ -41,7 +43,9 @@ export class TicketRepository {
   }
 
   async create(createTicketDto: CreateTicketDto, payment: MercadoPagoPayment) {
-    const { quantity, raffleId, status, expirationDate } = createTicketDto;
+    const { quantity, raffleId } = createTicketDto;
+    console.log(payment);
+    const expirationDate = dayjs().add(1, 'day').toDate();
 
     const buyer = await this.prisma.buyer.findUnique({
       where: { phone: createTicketDto.phone },
@@ -60,7 +64,7 @@ export class TicketRepository {
       const number = await this.generateUniqueTicketNumber(raffleId);
       const data = {
         number,
-        status,
+        status: StatusOptions.PENDING,
         expirationDate,
         raffleId,
         buyerId: buyer.id,

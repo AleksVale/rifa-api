@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { StatusOptions } from '@prisma/client';
-import {
-  IsNotEmpty,
-  IsString,
-  IsEmail,
-  IsNumber,
-  IsEnum,
-  IsDateString,
-} from 'class-validator'; // Certifique-se de importar o enum correto
+import { IsNotEmpty, IsString, IsEmail, IsNumber } from 'class-validator'; // Certifique-se de importar o enum correto
 
 export class CreateTicketDto {
   @ApiProperty()
@@ -39,12 +31,4 @@ export class CreateTicketDto {
   @IsNotEmpty()
   @IsNumber()
   raffleId: number;
-
-  @ApiProperty()
-  @IsEnum(StatusOptions)
-  status: StatusOptions;
-
-  @ApiProperty()
-  @IsDateString()
-  expirationDate: Date;
 }

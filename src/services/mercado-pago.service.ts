@@ -9,18 +9,13 @@ export class MercadoPagoService {
   constructor(private readonly configService: ConfigService) {
     this.mercadoPagoConfig = new MercadoPagoConfig({
       accessToken: this.configService.get<string>('MERCADO_PAGO_ACCESS_TOKEN'),
-      options: { timeout: 5000, idempotencyKey: 'abc' },
+      options: { timeout: 5000 },
     });
     this.payment = new Payment(this.mercadoPagoConfig);
   }
 
   async createPayment(data: MercadoPagoPaymentDto): Promise<any> {
     try {
-      console.log(
-        `${this.configService.get<string>(
-          'DOMAIN',
-        )}/transaction?source_news=webhook`,
-      );
       const responseMercado = await this.payment.create({
         body: {
           transaction_amount: data.transaction_amount,
