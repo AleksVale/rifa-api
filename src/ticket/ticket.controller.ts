@@ -6,15 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
-import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateTicketResponseDTO } from './dto/create-ticket-response.dto';
+import { CreateTicketDto } from './dto/create-ticket.dto';
 
+@ApiTags('Ticket')
 @Controller('ticket')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
+  @ApiResponse({ status: HttpStatus.CREATED, type: CreateTicketResponseDTO })
   @Post()
   create(@Body() createTicketDto: CreateTicketDto) {
     return this.ticketService.create(createTicketDto);

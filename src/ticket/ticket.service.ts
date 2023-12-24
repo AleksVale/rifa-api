@@ -1,17 +1,39 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { TicketRepository } from './ticket.repository';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { MercadoPagoService } from 'src/services/mercado-pago.service';
 
 @Injectable()
 export class TicketService {
-  constructor(private readonly ticketRepository: TicketRepository) {}
+  constructor(
+    private readonly ticketRepository: TicketRepository,
+    private readonly mercadoPago: MercadoPagoService,
+  ) {}
 
   async create(createTicketDto: CreateTicketDto) {
     try {
-      return await this.ticketRepository.create(createTicketDto);
+      const payment = await this.mercadoPago.createPayment({
+        transaction_amount: createTicketDto.price,
+        description: createTicketDto.quantity + ' tickets para a rifa',
+        email: createTicketDto.email,
+        identificationType: 'email',
+        number: createTicketDto.email,
+        paymentMethodId: 'pix',
+      });
+      const transaction = await this.ticketRepository.create(
+        createTicketDto,
+        payment,
+      );
+      console.log(transaction);
+      return payment;
     } catch (error) {
-      throw new Error('Failed to create ticket.');
+      console.log(error);
+      throw new InternalServerErrorException('Failed to create ticket.');
     }
   }
 

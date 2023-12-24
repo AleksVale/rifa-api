@@ -21,7 +21,9 @@ export class RaffleRepository {
   }
 
   async findAll() {
-    return this.prisma.raffle.findMany({ include: { Winner: true } });
+    return this.prisma.raffle.findMany({
+      include: { Winner: true, tickets: true },
+    });
   }
 
   findOne(id: number): Promise<Raffle | null> {

@@ -17,15 +17,30 @@ enum StatusOptions {
 }
 
 model Buyer {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  Ticket    Ticket[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String
+  phone       String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime?     @updatedAt
+  Ticket      Ticket[]
+  Transaction Transaction[]
 
   @@map("buyers")
+}
+
+model Transaction {
+  id        Int       @id @default(autoincrement())
+  amount    Float
+  value     Float
+  paid      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  buyerId   Int
+  buyer     Buyer     @relation(fields: [buyerId], references: [id])
+  Ticket    Ticket[]
+
+  @@map("transactions")
 }
 
 model Ticket {
@@ -38,7 +53,9 @@ model Ticket {
   raffle         Raffle        @relation(fields: [raffleId], references: [id])
   raffleId       Int
   buyerId        Int
+  transactionId  Int?
   Buyer          Buyer         @relation(fields: [buyerId], references: [id])
+  Transaction    Transaction?  @relation(fields: [transactionId], references: [id])
 
   @@map("tickets")
 }

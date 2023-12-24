@@ -8,6 +8,8 @@ import { PromotionModule } from './promotion/promotion.module';
 import { PrizeModule } from './prize/prize.module';
 import { WinnerModule } from './winner/winner.module';
 import { TicketModule } from './ticket/ticket.module';
+import { ConfigModule } from '@nestjs/config';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { TicketModule } from './ticket/ticket.module';
     PrizeModule,
     WinnerModule,
     TicketModule,
+    ConfigModule.forRoot(),
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

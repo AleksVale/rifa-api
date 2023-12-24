@@ -6,7 +6,7 @@ import {
   IsEmail,
   IsNumber,
   IsEnum,
-  IsDate,
+  IsDateString,
 } from 'class-validator'; // Certifique-se de importar o enum correto
 
 export class CreateTicketDto {
@@ -28,7 +28,12 @@ export class CreateTicketDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  number: number;
+  quantity: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -40,6 +45,6 @@ export class CreateTicketDto {
   status: StatusOptions;
 
   @ApiProperty()
-  @IsDate()
+  @IsDateString()
   expirationDate: Date;
 }
