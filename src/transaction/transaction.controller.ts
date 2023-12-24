@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Public } from 'src/util/Decorators/public';
@@ -11,5 +11,11 @@ export class TransactionController {
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto) {
     return this.transactionService.webhook(createTransactionDto);
+  }
+
+  @Public()
+  @Get(':phone')
+  get(@Param('phone') phone: string) {
+    return this.transactionService.getByPhone(phone);
   }
 }

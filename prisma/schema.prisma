@@ -30,32 +30,32 @@ model Buyer {
 }
 
 model Transaction {
-  id        Int       @id @default(autoincrement())
-  amount    Float
-  value     Float
-  paid      Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  buyerId   Int
-  buyer     Buyer     @relation(fields: [buyerId], references: [id])
-  Ticket    Ticket[]
+  id             Int       @id @default(autoincrement())
+  amount         Float
+  value          Float
+  paid           Boolean   @default(false)
+  expirationDate DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+  buyerId        Int
+  buyer          Buyer     @relation(fields: [buyerId], references: [id])
+  Ticket         Ticket[]
 
   @@map("transactions")
 }
 
 model Ticket {
-  id             Int           @id @default(autoincrement())
-  number         Int
-  status         StatusOptions
-  expirationDate DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime?     @updatedAt
-  raffle         Raffle        @relation(fields: [raffleId], references: [id])
-  raffleId       Int
-  buyerId        Int
-  transactionId  Int?
-  Buyer          Buyer         @relation(fields: [buyerId], references: [id])
-  Transaction    Transaction?  @relation(fields: [transactionId], references: [id])
+  id            Int           @id @default(autoincrement())
+  number        Int
+  status        StatusOptions
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime?     @updatedAt
+  raffle        Raffle        @relation(fields: [raffleId], references: [id])
+  raffleId      Int
+  buyerId       Int
+  transactionId Int?
+  Buyer         Buyer         @relation(fields: [buyerId], references: [id])
+  Transaction   Transaction?  @relation(fields: [transactionId], references: [id])
 
   @@map("tickets")
 }

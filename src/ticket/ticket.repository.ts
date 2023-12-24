@@ -44,7 +44,6 @@ export class TicketRepository {
 
   async create(createTicketDto: CreateTicketDto, payment: MercadoPagoPayment) {
     const { quantity, raffleId } = createTicketDto;
-    console.log(payment);
     const expirationDate = dayjs().add(1, 'day').toDate();
 
     const buyer = await this.prisma.buyer.findUnique({
@@ -59,13 +58,17 @@ export class TicketRepository {
         },
       });
     }
-    const createdTickets = [];
+    const createdTickets: {
+      number: number;
+      status: 'PENDING';
+      raffleId: number;
+      buyerId: number;
+    }[] = [];
     for (let i = 0; i < quantity; i++) {
       const number = await this.generateUniqueTicketNumber(raffleId);
       const data = {
         number,
         status: StatusOptions.PENDING,
-        expirationDate,
         raffleId,
         buyerId: buyer.id,
       };
@@ -76,6 +79,7 @@ export class TicketRepository {
         id: payment.id,
         amount: createTicketDto.quantity,
         value: payment.transaction_amount,
+        expirationDate,
         buyerId: buyer.id,
         Ticket: {
           createMany: {

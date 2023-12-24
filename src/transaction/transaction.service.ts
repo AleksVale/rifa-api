@@ -17,7 +17,6 @@ export class TransactionService {
       const payment = await this.mercadoPagoService.getPayment(
         createTransactionDto.data.id,
       );
-      console.log(payment);
       if (payment.status === 'approved') {
         await this.prismaService.ticket.updateMany({
           where: { transactionId: transaction.id },
@@ -26,5 +25,19 @@ export class TransactionService {
       }
     }
     return { success: true };
+  }
+
+  async getByPhone(phone: string) {
+    const buyer = await this.prismaService.buyer.findUnique({
+      where: { phone },
+    });
+    if (!buyer) {
+      return { success: false, message: 'Buyer not found' };
+    }
+    const transactions = await this.prismaService.transaction.findMany({
+      where: { buyerId: buyer.id },
+      include: { Ticket: true },
+    });
+    return transactions;
   }
 }
