@@ -25,11 +25,7 @@ export class TicketService {
         number: createTicketDto.email,
         paymentMethodId: 'pix',
       });
-      const transaction = await this.ticketRepository.create(
-        createTicketDto,
-        payment,
-      );
-      console.log(transaction);
+      await this.ticketRepository.create(createTicketDto, payment);
       return payment;
     } catch (error) {
       console.log(error);
