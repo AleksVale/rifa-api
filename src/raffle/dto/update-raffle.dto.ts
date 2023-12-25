@@ -5,9 +5,9 @@ import {
   IsString,
   IsInt,
   Min,
-  IsBoolean,
   IsDateString,
   IsArray,
+  IsBoolean,
 } from 'class-validator';
 
 class PrizeDto {

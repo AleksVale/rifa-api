@@ -41,6 +41,21 @@ export class RaffleService {
     return this.raffleRepository.update(id, updateRaffleDto);
   }
 
+  updatePhotos(id: number, files: Express.Multer.File[]) {
+    const raffleImages = [];
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        raffleImages.push({
+          name: file.filename,
+          url: `/uploads/files/${file.filename}`,
+          raffleId: id,
+        });
+      });
+    }
+
+    return this.raffleRepository.updatePhotos(id, raffleImages);
+  }
+
   remove(id: number) {
     return this.raffleRepository.remove(id);
   }

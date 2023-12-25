@@ -29,7 +29,7 @@ export class RaffleRepository {
   findOne(id: number): Promise<Raffle | null> {
     return this.prisma.raffle.findUnique({
       where: { id },
-      include: { Prize: true, Promotion: true },
+      include: { Prize: true, Promotion: true, RaffleImage: true },
     });
   }
 
@@ -41,36 +41,52 @@ export class RaffleRepository {
       data: raffleData,
     });
 
-    await this.prisma.promotion.deleteMany({
-      where: { raffleId: id },
-    });
+    data.promotions &&
+      (await this.prisma.promotion.deleteMany({
+        where: { raffleId: id },
+      }));
 
-    const promotionsMounted = promotions.map((promotion) => ({
+    const promotionsMounted = promotions?.map((promotion) => ({
       quantity: promotion.quantity,
       price: promotion.price,
       raffleId: id,
     }));
 
-    await this.prisma.promotion.createMany({
-      data: promotionsMounted,
-    });
+    promotionsMounted &&
+      (await this.prisma.promotion.createMany({
+        data: promotionsMounted,
+      }));
 
-    await this.prisma.prize.deleteMany({
-      where: { raffleId: id },
-    });
-    const prizesMounted = prizes.map((prize) => ({
+    data.prizes &&
+      (await this.prisma.prize.deleteMany({
+        where: { raffleId: id },
+      }));
+    const prizesMounted = prizes?.map((prize) => ({
       name: prize.name,
       place: prize.place,
       raffleId: id,
     }));
 
     // Cria as novas premiações
-    await this.prisma.prize.createMany({
-      data: prizesMounted,
-    });
+    prizesMounted &&
+      (await this.prisma.prize.createMany({
+        data: prizesMounted,
+      }));
 
     return updatedRaffle;
   }
+
+  async updatePhotos(id: number, files: File[]) {
+    const mountCreateRaffleImages = files?.map((file) => ({
+      name: file.name,
+      url: `/uploads/files/${file.name}`,
+      raffleId: id,
+    }));
+    await this.prisma.raffleImage.createMany({
+      data: mountCreateRaffleImages,
+    });
+  }
+
   remove(id: number): Promise<Raffle> {
     return this.prisma.raffle.delete({ where: { id } });
   }

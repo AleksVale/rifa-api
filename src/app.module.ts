@@ -10,9 +10,14 @@ import { WinnerModule } from './winner/winner.module';
 import { TicketModule } from './ticket/ticket.module';
 import { ConfigModule } from '@nestjs/config';
 import { TransactionModule } from './transaction/transaction.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'upload/files'),
+    }),
     RaffleModule,
     AuthModule,
     UsersModule,

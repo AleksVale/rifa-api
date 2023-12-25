@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { RaffleService } from './raffle.service';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
@@ -16,6 +18,11 @@ import { SuccessResponse } from 'src/common/dto/success.dto';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 import { Raffle } from '@prisma/client';
 import { Public } from 'src/util/Decorators/public';
+import {
+  AnyFilesInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
+import multerConfig from 'src/util/multer.config';
 
 @ApiTags('Rifa')
 @Controller('raffles')
@@ -65,6 +72,26 @@ export class RaffleController {
     @Body() updateRaffleDto: UpdateRaffleDto,
   ): Promise<SuccessResponse> {
     await this.raffleService.update(+id, updateRaffleDto);
+    return { success: true };
+  }
+
+  @Patch(':id/photos')
+  @UseInterceptors(FilesInterceptor('files', 6, multerConfig))
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    type: SuccessResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+    type: BadRequestResponse,
+  })
+  async updatePhotos(
+    @Param('id') id: string,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ): Promise<SuccessResponse> {
+    this.raffleService.updatePhotos(+id, files);
     return { success: true };
   }
 
