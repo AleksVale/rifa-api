@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
 import { RaffleRepository } from './raffle.repository';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class RaffleService {
@@ -38,6 +40,25 @@ export class RaffleService {
   }
 
   update(id: number, updateRaffleDto: UpdateRaffleDto) {
+    const uploadRootPath = path.join(__dirname, '../..', 'upload/files');
+    if (updateRaffleDto.deletedImages) {
+      for (const imageName of updateRaffleDto.deletedImages) {
+        const imagePath = path.join(uploadRootPath, imageName);
+
+        try {
+          // Check if the file exists before attempting to delete
+          if (fs.existsSync(imagePath)) {
+            // Delete the file
+            fs.unlinkSync(imagePath);
+            console.log(`Deleted ${imageName}`);
+          } else {
+            console.log(`${imageName} does not exist`);
+          }
+        } catch (error) {
+          console.error(`Error deleting ${imageName}: ${error.message}`);
+        }
+      }
+    }
     return this.raffleRepository.update(id, updateRaffleDto);
   }
 

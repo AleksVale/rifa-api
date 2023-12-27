@@ -107,8 +107,15 @@ export class TicketRepository {
 
   async findByRaffle(id: number) {
     const buyers = await this.prisma.buyer.findMany({
-      where: { Ticket: { some: { raffleId: id } } },
-      include: { Ticket: true },
+      where: {
+        Ticket: { some: { raffleId: id } },
+        Transaction: {
+          some: {
+            paid: true,
+          },
+        },
+      },
+      include: { Ticket: true, Transaction: true },
       orderBy: {
         Ticket: {
           _count: 'desc', // Ordenar por quantidade de tickets em ordem descendente

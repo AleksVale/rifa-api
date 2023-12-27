@@ -18,4 +18,9 @@ export class TransactionController {
   get(@Param('phone') phone: string) {
     return this.transactionService.getByPhone(phone);
   }
+
+  @Get('raffle/:id')
+  getByRaffle(@Param('id') id: string) {
+    return this.transactionService.getByRaffleId(+id);
+  }
 }

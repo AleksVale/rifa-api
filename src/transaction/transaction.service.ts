@@ -40,4 +40,12 @@ export class TransactionService {
     });
     return transactions;
   }
+
+  async getByRaffleId(id: number) {
+    const transactions = await this.prismaService.transaction.findMany({
+      where: { Ticket: { every: { raffleId: id } } },
+      include: { Ticket: true, buyer: true },
+    });
+    return transactions;
+  }
 }

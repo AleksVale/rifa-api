@@ -18,10 +18,7 @@ import { SuccessResponse } from 'src/common/dto/success.dto';
 import { BadRequestResponse } from 'src/common/dto/bad-request.dto';
 import { Raffle } from '@prisma/client';
 import { Public } from 'src/util/Decorators/public';
-import {
-  AnyFilesInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import multerConfig from 'src/util/multer.config';
 
 @ApiTags('Rifa')
@@ -52,7 +49,7 @@ export class RaffleController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.raffleService.findOne(+id);
   }
 

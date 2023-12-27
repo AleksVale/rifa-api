@@ -90,4 +90,9 @@ export class UpdateRaffleDto {
   @IsOptional()
   @IsArray()
   promotions?: PromotionDto[];
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsArray()
+  deletedImages?: string[];
 }

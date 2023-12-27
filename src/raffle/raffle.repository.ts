@@ -34,7 +34,7 @@ export class RaffleRepository {
   }
 
   async update(id: number, data: UpdateRaffleDto) {
-    const { prizes, promotions, ...raffleData } = data;
+    const { prizes, promotions, deletedImages, ...raffleData } = data;
 
     const updatedRaffle = await this.prisma.raffle.update({
       where: { id },
@@ -71,6 +71,11 @@ export class RaffleRepository {
     prizesMounted &&
       (await this.prisma.prize.createMany({
         data: prizesMounted,
+      }));
+
+    deletedImages &&
+      (await this.prisma.raffleImage.deleteMany({
+        where: { name: { in: deletedImages } },
       }));
 
     return updatedRaffle;
