@@ -28,7 +28,7 @@ export class RaffleService {
     return raffles.filter((raffle) => {
       if (status === 'active') {
         return !raffle.Winner;
-      } else if (status === 'inactive') {
+      } else if (status === 'finished') {
         return !!raffle.Winner;
       }
       return true;
